@@ -50,7 +50,7 @@ def toolchainVersion() {
 	if (project.hasProperty('testToolchain')) {
 		return project.property('testToolchain').toString().toInteger()
 	}
-	return 17
+	return 21
 }
 
 subprojects {
@@ -61,13 +61,13 @@ subprojects {
 	}
 	kotlin {
 		jvmToolchain {
-			languageVersion = JavaLanguageVersion.of(17)
+			languageVersion = JavaLanguageVersion.of(21)
 		}
 	}
 	tasks.withType(JavaCompile).configureEach {
 		options.encoding = "UTF-8"
 		options.compilerArgs.add("-parameters")
-		options.release.set(17)
+		options.release.set(21)
 	}
 }
 

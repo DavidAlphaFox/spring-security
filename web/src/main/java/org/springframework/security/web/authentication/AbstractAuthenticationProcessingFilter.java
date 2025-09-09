@@ -241,27 +241,27 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 		try {
 			Authentication authenticationResult = attemptAuthentication(request, response);
 			if (authenticationResult == null) {
-				if (this.continueChainWhenNoAuthenticationResult) {
+				if (this.continueChainWhenNoAuthenticationResult) { //认证没结果依然继续向下执行
 					chain.doFilter(request, response);
 					return;
 				}
 				// return immediately as subclass has indicated that it hasn't completed
-				return;
+				return; //否则直接返回
 			}
-			this.sessionStrategy.onAuthentication(authenticationResult, request, response);
+			this.sessionStrategy.onAuthentication(authenticationResult, request, response); //使用Session管理策略处理验证结果
 			// Authentication success
-			if (this.continueChainBeforeSuccessfulAuthentication) {
+			if (this.continueChainBeforeSuccessfulAuthentication) {//在确认成功前，继续执行Filter
 				chain.doFilter(request, response);
 			}
-			successfulAuthentication(request, response, chain, authenticationResult);
+			successfulAuthentication(request, response, chain, authenticationResult);//验证成功
 		}
 		catch (InternalAuthenticationServiceException failed) {
 			this.logger.error("An internal error occurred while trying to authenticate the user.", failed);
-			unsuccessfulAuthentication(request, response, failed);
+			unsuccessfulAuthentication(request, response, failed); //出现异常，验证失败
 		}
 		catch (AuthenticationException ex) {
 			// Authentication failed
-			unsuccessfulAuthentication(request, response, ex);
+			unsuccessfulAuthentication(request, response, ex); //验证直接抛出异常了
 		}
 	}
 
@@ -344,18 +344,18 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 	 */
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
-		context.setAuthentication(authResult);
-		this.securityContextHolderStrategy.setContext(context);
+		SecurityContext context = this.securityContextHolderStrategy.createEmptyContext(); //创建安全上下文SecurityContext
+		context.setAuthentication(authResult);//将认证结果放到SecurityContext中
+		this.securityContextHolderStrategy.setContext(context);//绑定线程
 		this.securityContextRepository.saveContext(context, request, response);
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug(LogMessage.format("Set SecurityContextHolder to %s", authResult));
 		}
-		this.rememberMeServices.loginSuccess(request, response, authResult);
+		this.rememberMeServices.loginSuccess(request, response, authResult);//记住我
 		if (this.eventPublisher != null) {
 			this.eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
 		}
-		this.successHandler.onAuthenticationSuccess(request, response, authResult);
+		this.successHandler.onAuthenticationSuccess(request, response, authResult);//使用认证成功handler进行handle
 	}
 
 	/**

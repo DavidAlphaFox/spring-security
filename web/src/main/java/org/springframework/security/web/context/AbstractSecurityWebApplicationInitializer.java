@@ -139,7 +139,7 @@ public abstract class AbstractSecurityWebApplicationInitializer implements WebAp
 			springSecurityFilterChain.setContextAttribute(contextAttribute);
 		}
 		registerFilter(servletContext, true, filterName, springSecurityFilterChain);
-	}
+	} //将Spring Security的Chain插入到整个ServLetContext的最前面
 
 	/**
 	 * Inserts the provided {@link Filter}s before existing {@link Filter}s using default
