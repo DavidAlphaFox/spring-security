@@ -182,7 +182,7 @@ public class OAuth2AuthorizationCodeGrantFilter extends OncePerRequestFilter {
 		}
 		filterChain.doFilter(request, response);
 	}
-
+	//匹配回调的请求和发起认证的请求
 	private boolean matchesAuthorizationResponse(HttpServletRequest request) {
 		MultiValueMap<String, String> params = OAuth2AuthorizationResponseUtils.toMultiMap(request.getParameterMap());
 		if (!OAuth2AuthorizationResponseUtils.isAuthorizationResponse(params)) {
@@ -215,7 +215,7 @@ public class OAuth2AuthorizationCodeGrantFilter extends OncePerRequestFilter {
 		}
 		return false;
 	}
-
+	//处理这个OAuth2认证服务器回调来的请求
 	private void processAuthorizationResponse(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		OAuth2AuthorizationRequest authorizationRequest = this.authorizationRequestRepository

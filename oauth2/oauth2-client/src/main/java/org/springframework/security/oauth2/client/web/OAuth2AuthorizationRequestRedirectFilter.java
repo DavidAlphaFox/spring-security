@@ -83,7 +83,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * (Authorization Code)</a>
  */
 public class OAuth2AuthorizationRequestRedirectFilter extends OncePerRequestFilter {
-
+	//生成一个调用OAuth2认证服务器的跳转
 	/**
 	 * The default base {@code URI} used for authorization requests.
 	 */
@@ -180,9 +180,9 @@ public class OAuth2AuthorizationRequestRedirectFilter extends OncePerRequestFilt
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		try {
-			OAuth2AuthorizationRequest authorizationRequest = this.authorizationRequestResolver.resolve(request);
+			OAuth2AuthorizationRequest authorizationRequest = this.authorizationRequestResolver.resolve(request); //获得认证请求
 			if (authorizationRequest != null) {
-				this.sendRedirectForAuthorization(request, response, authorizationRequest);
+				this.sendRedirectForAuthorization(request, response, authorizationRequest); //认证请求存在的时候直接进行跳转
 				return;
 			}
 		}
@@ -230,11 +230,11 @@ public class OAuth2AuthorizationRequestRedirectFilter extends OncePerRequestFilt
 
 	private void sendRedirectForAuthorization(HttpServletRequest request, HttpServletResponse response,
 			OAuth2AuthorizationRequest authorizationRequest) throws IOException {
-		if (AuthorizationGrantType.AUTHORIZATION_CODE.equals(authorizationRequest.getGrantType())) {
+		if (AuthorizationGrantType.AUTHORIZATION_CODE.equals(authorizationRequest.getGrantType())) {//使用Code授权需要先将请求报错
 			this.authorizationRequestRepository.saveAuthorizationRequest(authorizationRequest, request, response);
 		}
 		this.authorizationRedirectStrategy.sendRedirect(request, response,
-				authorizationRequest.getAuthorizationRequestUri());
+				authorizationRequest.getAuthorizationRequestUri());//直接进行重定向
 	}
 
 	private void unsuccessfulRedirectForAuthorization(HttpServletRequest request, HttpServletResponse response,

@@ -52,7 +52,7 @@ import org.springframework.web.util.UriUtils;
  * Grant Request</a>
  */
 public final class OAuth2AuthorizationRequest implements Serializable {
-
+	//OAuth2认证请求
 	private static final long serialVersionUID = 620L;
 
 	private String authorizationUri;

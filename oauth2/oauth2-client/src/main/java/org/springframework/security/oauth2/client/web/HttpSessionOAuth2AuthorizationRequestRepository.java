@@ -46,13 +46,13 @@ public final class HttpSessionOAuth2AuthorizationRequestRepository
 	@Override
 	public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
 		Assert.notNull(request, "request cannot be null");
-		String stateParameter = getStateParameter(request);
+		String stateParameter = getStateParameter(request); //得到state参数
 		if (stateParameter == null) {
 			return null;
 		}
 		OAuth2AuthorizationRequest authorizationRequest = getAuthorizationRequest(request);
 		return (authorizationRequest != null && stateParameter.equals(authorizationRequest.getState()))
-				? authorizationRequest : null;
+				? authorizationRequest : null; //确保state参数是相同的
 	}
 
 	@Override
@@ -64,9 +64,9 @@ public final class HttpSessionOAuth2AuthorizationRequestRepository
 			removeAuthorizationRequest(request, response);
 			return;
 		}
-		String state = authorizationRequest.getState();
+		String state = authorizationRequest.getState(); //得到状态
 		Assert.hasText(state, "authorizationRequest.state cannot be empty");
-		request.getSession().setAttribute(this.sessionAttributeName, authorizationRequest);
+		request.getSession().setAttribute(this.sessionAttributeName, authorizationRequest);//将当前的认证请求编码到Session中
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public final class HttpSessionOAuth2AuthorizationRequestRepository
 	}
 
 	private OAuth2AuthorizationRequest getAuthorizationRequest(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession(false); //得到session
 		return (session != null) ? (OAuth2AuthorizationRequest) session.getAttribute(this.sessionAttributeName) : null;
 	}
 
